@@ -2,8 +2,8 @@ package Math::Symbolic::MaximaSimple;
 
 use parent qw{Exporter};
 our %EXPORT_TAGS=(
-  tex => [ qw{ &maxima_tex } ],
-  maxima => [ qw{ &maxima } ],
+  tex => [ qw{ &maxima_tex &maxima_tex1 &maxima_tex2 } ],
+  maxima => [ qw{ &maxima &startmaxima } ],
 );
 
 our @EXPORT_OK=  map {ref($_) ? (@$_):()}  values %EXPORT_TAGS ;
@@ -12,7 +12,8 @@ $EXPORT_TAGS{all}= \@EXPORT_OK;
 
 use warnings;
 use strict;
-our $VERSION = '0.01';
+our $VERSION = '0.01_2';
+our $state="stoped";
 
 our $N=333333333333;
 use IPC::Open2;
@@ -26,6 +27,8 @@ my $W;
 #}
 
 sub startmaxima{
+  return if $state eq "started";
+  $state = "started";
   $SIG{"INT" }=\&_K;
   $pid = open2($R,$W,"maxima ---very-quiet") || die("can open2 maxima\n");
   print $W 'display2d:false$';
@@ -43,7 +46,8 @@ sub startmaxima{
 #  print "maxima tex2-- ",maxima_tex2($_), "\n";
 #}
 
-sub _maxima_tex1{
+sub maxima_tex1{
+  startmaxima() unless $state eq "started";
   my $exp=shift;
   print $W "tex1($exp);\n$N;\n";
   my $a=<$R>;
@@ -54,7 +58,8 @@ sub _maxima_tex1{
   _clean($b);
 }
 
-sub _maxima_tex2{
+sub maxima_tex2{
+  startmaxima() unless $state eq "started";
   my $exp=shift;
   print $W "tex($exp);\n$N;\n";
   #print $W "tex($exp)\$;\n$N;\n";
@@ -67,6 +72,7 @@ sub _maxima_tex2{
 }
 
 sub maxima_tex{
+  startmaxima() unless $state eq "started";
   my $exp=shift;
   print $W "tex($exp);\n$N;\n";
   #print $W "tex($exp)\$;\n$N;\n";
@@ -79,6 +85,7 @@ sub maxima_tex{
 }
 
 sub maxima{
+  startmaxima() unless $state eq "started";
   my $exp=shift;
   print $W "$exp;\n$N;\n";
   my $a=<$R>;
@@ -106,25 +113,33 @@ sub _clean{my $b=shift;
   else                       { [$b]}
 }
 
-sub _K {print "END\n\n"; kill(9,$pid); exit 1; }
+sub _K { ## print STDERR "END (--$state--)\n\n"; 
+        kill(9,$pid) if $state eq "started" ; 
+        exit 0; 
+}
 
-## END{ _K();}
+END{ _K();}
 
 1; # End of Math::Symbolic::MaximaSimple
 
 =head1 NAME
 
-Math::Symbolic::MaximaSimple - The great new Math::Symbolic::MaximaSimple!
+Math::Symbolic::MaximaSimple - open2 interface with maxima math system
 
 =head1 VERSION
 
-Version 0.01
+Version 0.01_2
 
 =head1 SYNOPSIS
 
-    use Math::Symbolic::MaximaSimple;
+    use Math::Symbolic::MaximaSimple qw(:all);
 
-    my $foo = Math::Symbolic::MaximaSimple->new();
+    $e = "x+x+x+x+x**2-4+8"
+    maxima_tex($e)            ## $$x^2+4\,x+4$$
+    maxima_tex1$e)            ## "x^2+4\\,x+4"
+    maxima_tex2($e)           ## x^2+4\,x+4
+    maxima_tex2("diff($e,x)") ## 2\,x+4
+    maxima("diff($e,x)")      ## 2*x+4
 
 =head1 EXPORT
 
@@ -132,10 +147,16 @@ Version 0.01
 
 =head2 startmaxima
 
+star maxima process in beckgrown with Open2.
+Not necessary; the other functions call startmaxima if state="stoped";
+
 =head2 maxima_tex
 
-=head2 maxima
+=head2 maxima_tex1
 
+=head2 maxima_tex2
+
+=head2 maxima
 
 =head1 AUTHOR
 

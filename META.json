@@ -1,5 +1,5 @@
 {
-   "abstract" : "The great new Math::Symbolic::MaximaSimple!",
+   "abstract" : "open2 interface with maxima math system",
    "author" : [
       "J.Joao Almeida <jj@di.uminho.pt>"
    ],
@@ -36,6 +36,6 @@
          }
       }
    },
-   "release_status" : "stable",
-   "version" : "0.01"
+   "release_status" : "testing",
+   "version" : "0.01_2"
 }
