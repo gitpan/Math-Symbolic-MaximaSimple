@@ -12,7 +12,7 @@ $EXPORT_TAGS{all}= \@EXPORT_OK;
 
 use warnings;
 use strict;
-our $VERSION = '0.01_3';
+our $VERSION = '0.01_4';
 our $state="stoped";
 
 our $N=333333333333;
@@ -128,7 +128,7 @@ Math::Symbolic::MaximaSimple - open2 interface with maxima math system
 
 =head1 VERSION
 
-Version 0.01_3
+Version 0.01_4
 
 =head1 SYNOPSIS
 

@@ -1,23 +1,23 @@
----
-abstract: 'open2 interface with maxima math system'
+--- #YAML:1.0
+name:               Math-Symbolic-MaximaSimple
+version:            0.01_4
+abstract:           open2 interface with maxima math system
 author:
-  - 'J.Joao Almeida <jj@di.uminho.pt>'
-build_requires:
-  ExtUtils::MakeMaker: 0
+    - J.Joao Almeida <jj@di.uminho.pt>
+license:            perl
+distribution_type:  module
 configure_requires:
-  ExtUtils::MakeMaker: 0
-dynamic_config: 1
-generated_by: 'ExtUtils::MakeMaker version 6.59, CPAN::Meta::Converter version 2.112621'
-license: perl
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
-name: Math-Symbolic-MaximaSimple
-no_index:
-  directory:
-    - t
-    - inc
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
 requires:
-  Test::More: 0
-  parent: 0
-version: 0.01_3
+    parent:      0
+    Test::More:  0
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.56
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
