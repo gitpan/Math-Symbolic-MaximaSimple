@@ -12,7 +12,7 @@ $EXPORT_TAGS{all}= \@EXPORT_OK;
 
 use warnings;
 use strict;
-our $VERSION = '0.01_4';
+our $VERSION = '0.02';
 our $state="stoped";
 
 our $N=333333333333;
@@ -99,7 +99,9 @@ sub _clean2{my ($b,%a)=@_;
   $b =~ s/\(%i\d+\)\s*//g;
   $b =~ s/\s*$//;
   if($b =~ s/\s*\(\%o\d+\)\s*false\s*//){ 
-    if($a{nomathenv}){ $b =~ s/^\$\$(.*)\$\$$/$1/; 
+    $b =~ s/\%e\b/e/g;
+    $b =~ s/\%pi\b/\\pi/g;
+    if($a{nomathenv}){ $b =~ s/^\$\$(.*)\$\$$/$1/s; 
           $b }
     else{ $b }
   }
@@ -109,6 +111,8 @@ sub _clean2{my ($b,%a)=@_;
 sub _clean{my $b=shift;
   $b =~ s/\(%i\d+\)\s*//g;
   $b =~ s/\s*$//;
+  $b =~ s/\%e\b/e/g;
+  $b =~ s/\%pi\b/\\pi/g;
   if($b =~ s/\(\%o\d+\)\s*//){ $b  }
   else                       { [$b]}
 }
@@ -166,11 +170,10 @@ J.Joao Almeida, C<< <jj at di.uminho.pt> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 J.Joao Almeida.
+Copyright 2011-2012 Project Natura.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
+This library is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.
 
 See http://dev.perl.org/licenses/ for more information.
 
